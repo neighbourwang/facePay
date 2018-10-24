@@ -1,0 +1,61 @@
+.contactpage{
+    position: relative;
+    .PayVedio2{
+        position: absolute;
+        height:300px;
+        width:300px;
+        top: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        border:10px solid darkturquoise; 
+        border-radius: 50%;
+        background-color: gray;
+        // background-image: url('../assets/imgs/iu.jpeg');
+        // background-size:100%;
+        video{
+            display: none;
+        }
+        canvas{
+            // width:250px;
+            // height:250px;
+            // display: none;
+            
+        }
+        overflow: hidden;
+    }
+    .PayOrderDiv{
+        height:25rem;
+        .myOrder{
+            font-weight: bold;
+        }
+        .readAll{
+            font-size: 1rem;
+            color:gray;
+        }
+    }
+    .circle-load {
+        position: absolute;
+        height:300px;
+        width:300px;
+        top: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .circle-load-svg {
+        stroke-dasharray: 0 911;
+        // stroke-dashoffset:227.75;
+        animation: rot 1s linear 1;
+        animation-fill-mode: forwards 
+    }
+    
+    @keyframes rot {
+        // 0% {
+        //     stroke-dasharray: 0 0;
+        // }
+        100% {
+            stroke-dasharray: 911 911;
+        }
+    }
+        
+}
