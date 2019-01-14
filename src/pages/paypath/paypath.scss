@@ -1,0 +1,102 @@
+.canceltab{
+    height: 4rem;
+    .rightlab{
+        background-color: rgb(76,93,216);
+        border-top-left-radius:2rem;
+        border-bottom-left-radius:2rem;
+        border-top-right-radius:2rem;
+        border-bottom-right-radius:2rem;
+        color:#fff;
+        font-size: 14px;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        line-height: 2.5rem;
+    }
+}
+.orderDetail{
+    color:gray;
+    .price{
+        font-size: 2rem;;
+        // text-align: center;
+        padding-left: 2rem;
+        line-height: 6rem;
+        // font-weight: bold;
+        >span{
+            color:rgb(234,84,77);   
+        }
+    }
+    .priceDetail{
+        >div{
+            width:50%;
+            padding-left: 2rem;                        
+        }
+        .totlePrice{
+            .totlePriceNum{
+                color:rgb(234,84,77); 
+            }
+        }
+        .count{
+            border-left:1px solid #ddd; 
+            .countTitle{
+            }
+            .countNum{
+                color:rgb(234,84,77);    
+            }
+        }
+    }
+}
+.paySelect{
+    color:gray;    
+    margin-top:2rem;
+    text-align: center;
+    .payDiv{
+        background: gray;
+        height:4rem;
+        width:75%;
+        border-radius: 5px;
+        margin:1rem auto;
+        color:#fff;
+        line-height: 4rem;   
+    }
+    .zhifubao{
+        background-color:#108ee9;        
+        p{
+            padding: 0;
+        }
+        >div{
+            width:50%;
+            margin-top:0.5rem;            
+        }
+        .aliIcon{
+            text-align: right;
+            line-height: 4rem;
+            .shadow{
+                width:0;
+                height:0;
+            }
+            img{
+                // vertical-align: middle;
+            }
+            
+        }
+        .alitext{
+            font-size: 1.1rem;
+            color:#fff;
+            text-align: left;
+            span{
+                display: block;
+                line-height: 1.5rem;
+            }
+        }
+         
+    }
+    .wechat{
+        background-color: rgb(61,177,45);
+    }
+    .aliFaceDetect{
+        background-color: rgb(46,80,187);
+    }
+    .coupon{
+        background-color: rgb(247,118,47);
+    }
+}

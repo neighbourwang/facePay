@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 // import { JPush } from 'ionic-native';
-
+import { PayPathPage} from '../pages/paypath/paypath'
 import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
@@ -27,7 +27,7 @@ import { wyHttpService } from '../config/http.service'
 import { UserService } from '../config/user.service'
 import { CameraPreview } from '@ionic-native/camera-preview';
 import { Device } from '@ionic-native/device';
-// import { Wechat } from '@ionic-native/wechat';
+import { Wechat } from '@ionic-native/wechat';
 
 import { CameraPreviewService } from '../providers/cameraPreview.service';
 
@@ -43,7 +43,8 @@ import { CameraPreviewService } from '../providers/cameraPreview.service';
     TabsPage,
     PayPage,
     PreviewPage,
-    QRcodePage
+    QRcodePage,
+    PayPathPage
   ],
   imports: [
     BrowserModule,
@@ -74,7 +75,7 @@ import { CameraPreviewService } from '../providers/cameraPreview.service';
     UserService,
     JPush,
     Device,
-    // Wechat,
+    Wechat,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

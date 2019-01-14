@@ -7,7 +7,9 @@ import { App } from 'ionic-angular';
 import { UserService } from '../../config/user.service'
 import { wyHttpService } from '../../config/http.service'
 
-// import { Wechat } from '@ionic-native/wechat';
+import { Wechat } from '@ionic-native/wechat';
+// declare var Wechat: any;
+
 @Component({
     selector:'page-mine',
     templateUrl:'mine.html'
@@ -18,7 +20,7 @@ export class MinePage{
     private userservice:UserService,
     private http: wyHttpService,
     private app:App,
-    // private wechat: Wechat
+    private wechat: Wechat
     ){
         
 
@@ -62,25 +64,57 @@ export class MinePage{
         this.http.wechatUnifiedOrder();
     }
     wechatAuth(){
-        // this.wechat.auth("snsapi_userinfo","wechat_sdk_demo").then(data=>{
-        //     console.log(data)
-        // }).catch(error=>{
-        //     console.log(error)
+        // console.log(this.wechat)
+        let  scope = "snsapi_userinfo";
+        let  state = "_" + (+new Date());
+        
+        console.log(Wechat)
+        // Wechat.auth(scope, state, function (response) {
+        //     // you may use response.code to get the access token.
+        //     // alert(JSON.stringify(response));
+        //     console.log(response)
+        // }, function (reason) {
+        //     alert("Failed: " + reason);
         // })
+       
+        this.wechat.auth("snsapi_userinfo",state).then(data=>{
+            console.log(JSON.stringify(data))
+        }).catch(error=>{
+            console.log(error)
+            console.log(error.code)
+            console.log(JSON.stringify(error))
+        })
+        
+    }
+    isInstalled(){
+        // Wechat.isInstalled(function (installed) {
+        //     alert("Wechat installed: " + (installed ? "Yes" : "No"));
+        // }, function (reason) {
+        //     alert("Failed: " + reason);
+        // });
+        this.wechat.isInstalled().then(data=>{
+            console.log('isstall',data)
+        }).catch(error=>{
+            console.log(error.code)
+        })
     }
     wechatPay(){
         let params={
-            appid:'wx5055b021a210708c',
-            package:'Sign=WXPay',
-            partnerid:'1469962302',
-            prepayid:'',            
-            nonce_str:'1add1a30ac87aa2db72f57a2375d8fec',
-            timestamp:new Date().getTime(),
-            sign:''
-
+            appid:'wx13ab4a58decd95e2',
+            partnerid: '1395500102', // merchant id
+            prepayid: 'wx201411101639507cbf6ffd8b0779950874', // prepay id
+            noncestr: '6aZ4n2ziQ5f2nhBWE8wB6dsfwi4n7x4G', // nonce
+            timestamp: '1439531364', // timestamp
+            sign: 'e64cc4743a57bee5834d412a5b399aca',
         }
-//         this.wechat.sendPaymentRequest('kk')
-//   .then((res: any) => console.log(res))
-//   .catch((error: any) => console.error(error));
+        // Wechat.sendPaymentRequest(params,function () {
+        //     alert("Success");
+        // }, function (reason) {
+        //     alert("Failed: " + reason);
+        // })
+        this.wechat.sendPaymentRequest(params)
+  .then((res: any) => console.log(res))
+  .catch((error: any) => console.error(error));
+
     }
 }

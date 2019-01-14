@@ -41,7 +41,6 @@ export class RegisterPage {
             _self.getUserId(arg);
         }
         console.log(document['clientWidth'])
-        
     }
     streamTrack = [];
     imgBase = '';
@@ -67,19 +66,19 @@ export class RegisterPage {
         // setTimeout(this.getH5Cameral(), 0)
         console.log('iii');
         this.statusBar.hide();
-        this.video = document.getElementById('video2');
+        // this.video = document.getElementById('video2');
         this.canvas = document.getElementById('canvas2');
         this.ctx = this.canvas.getContext('2d');
         this.body=document.getElementsByTagName('body')[0];
         this.dom=this.ElementRef.nativeElement.querySelector('.registerPage');
         // this.myVideo=this.ElementRef.nativeElement.querySelector('.myVideo')
-        this.myVideo=document.getElementById('myVideo')
+        // this.myVideo=document.getElementById('myVideo')
         console.log(this.dom.clientWidth)
         this.deviceWidth=0.7*(this.dom.clientWidth);
         // this.myVideo.setAttribute('height',this.deviceWidth)
-        console.log(this.myVideo);
+        // console.log(this.myVideo);
         console.log(this.deviceWidth);
-        this.myVideo.setAttribute('style',`height:${this.deviceWidth}px`)
+        // this.myVideo.setAttribute('style',`height:${this.deviceWidth}px`)
         this.canvas.setAttribute('width',`${this.deviceWidth-20}px`)
         this.canvas.setAttribute('height',`${this.deviceWidth-20}px`)
     }
@@ -90,8 +89,6 @@ export class RegisterPage {
 
         // this.takePicture()
         // this.drawImage(false)
-       
-        
     }
     setCurrentStyles() {
         // CSS styles: set per current state of component properties
@@ -509,21 +506,21 @@ export class RegisterPage {
             // Promise.all([this.http.registerDB('dcc9adbb8533bc083083bef62795a8e7', 6499,'2088402239622912')]).then(data=>{
             console.log('ss', data)
             this.userservice.login(this.face_token, this.imgBase, null, this.user_id, this.phoneNumber)
-            let registerSuccessAlert = this.promptAlert.create({
-                title: '提示',
-                message: "注册成功,点击确认进入授权页面",
-                buttons: [
-                    {
-                        text: '确认',
-                        handler: data => {
-                            console.log('registerSuccesss');
-                            // this.navCtrl.pop()
+            // let registerSuccessAlert = this.promptAlert.create({
+            //     title: '提示',
+            //     message: "注册成功,点击确认进入授权页面",
+            //     buttons: [
+            //         {
+            //             text: '确认',
+            //             handler: data => {
+            //                 console.log('registerSuccesss');
+            //                 // this.navCtrl.pop()
                             _self.qrcode()     
-                        }
-                    }
-                ]
-            })
-            registerSuccessAlert.present();
+            //             }
+            //         }
+            //     ]
+            // })
+            // registerSuccessAlert.present();
         }).catch(err => {
             console.log('ee')
 

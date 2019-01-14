@@ -1,0 +1,36 @@
+<ion-content padding>
+    <div class="canceltab">
+        <div class="rightlab right" (click)="cancelPay()">取消支付</div>
+    </div>
+    <div class="orderDetail">
+        <div class="price">￥ <span>15.49</span></div>
+        <div class="priceDetail">
+            <div class="totlePrice left">
+                <div class="totlePricetitle">总金额</div>
+                <div class="totlePriceNum">￥ 15.50</div>
+            </div>
+            <div class="left count">
+                <div class="countTitle">优惠金额</div>
+                <div class="countNum">￥ 0.01</div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="paySelect">
+        <div>请选择支付方式</div>
+        <div class="payDiv zhifubao" (click)="pay('zhifubao')">
+            <div class="left aliIcon">
+                <img src="./assets/imgs/zhifubao.png" alt="">
+                <img src="" class="shadow" alt="">
+            </div>
+            <div class="left alitext">
+                <span>支付宝</span>
+                <span>AliPay</span>
+            </div>
+            
+        </div>
+        <div class="payDiv wechat" (click)="pay('wechat')">微信支付</div>
+        <div class="payDiv aliFaceDetect">其他</div>
+        <!-- <div class="payDiv coupon"></div> -->
+    </div>
+  </ion-content>

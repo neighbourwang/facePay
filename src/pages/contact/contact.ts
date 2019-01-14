@@ -9,6 +9,8 @@ import { UserService } from '../../config/user.service'
 import { CameraPreviewService } from '../../providers/cameraPreview.service';
 import { Device } from '@ionic-native/device';
 import { ElementRef ,Renderer2} from '@angular/core';
+import { QRcodePage } from '../qrcode/qrcode';
+import { PayPathPage } from '../paypath/paypath'
 
 @Component({
   selector: 'page-contact',
@@ -28,6 +30,7 @@ export class ContactPage {
   img = null;
   phoneNumber = null;
   user_id = null;
+  open_id=null;
   face_token = null;
   int1 = null;
   int2 = null;
@@ -40,7 +43,10 @@ export class ContactPage {
   cameraOn: boolean = false;
   previewOn: boolean = false;
   dom=null;
-
+  myVideo=null;
+  deviceWidth=null;
+  time=null;
+  payPath=null;
   ngOnInit() {
   }
   startAnimation() {
@@ -48,7 +54,8 @@ export class ContactPage {
   }
   ionViewWillEnter() {
     console.log('contact');
-    this.video = document.getElementById('video1');
+    
+    // this.video = document.getElementById('video1');
     this.canvas = document.getElementById('canvas1');
     this.ctx = this.canvas.getContext('2d');
     console.log(this.platform)
@@ -56,10 +63,25 @@ export class ContactPage {
     // this.takePicture()
     // this.drawImage(false)
     this.dom=this.ElementRef.nativeElement.querySelector('.contactpage');
-
+    // this.myVideo=document.getElementById('PayVedio2')
+    console.log(this.dom.clientWidth)
+    this.deviceWidth=0.7*(this.dom.clientWidth);
+    // this.myVideo.setAttribute('height',this.deviceWidth)
+    // console.log(this.myVideo);
+    console.log(this.deviceWidth);
+    // this.myVideo.setAttribute('style',`height:${this.deviceWidth}px`)
+    this.canvas.setAttribute('width',`${this.deviceWidth-20}px`)
+    this.canvas.setAttribute('height',`${this.deviceWidth-20}px`)
+    //启动摄像头
+    // this.time=setTimeout(()=>{
+    //   this.takePicture();
+    // },1000)
   }
   takePicture() {
     let _self = this;
+    if(this.device.uuid==null){
+      this.isUser=true;return
+    }
     this.previewOn = true;
     // if (this.device.platform == "iOS") {
     console.log('ios')
@@ -258,6 +280,7 @@ export class ContactPage {
         })
         loginSuccessAlert.present();
       } else {
+        this.face_token=data.facea[0].face_token;
         this.drawImage(data.faces[0].face_rectangle);
         if (data.results[0].confidence > 90) {
           _self.face_token = data.results[0].face_token;
@@ -265,7 +288,13 @@ export class ContactPage {
         } else {
           let loginSuccessAlert = this.promptAlert.create({
             title: '提示',
-            message: "未检测到注册信息，请点确认重新检测",
+            message: "未检测到注册信息，请输入手机号注册",
+            inputs: [
+              {
+                name: 'phonenumber',
+                placeholder: '手机号码'
+              }
+            ],
             buttons: [
               {
                 text: '取消',
@@ -278,7 +307,9 @@ export class ContactPage {
                 handler: data => {
                   // console.log('detect failed');
                   // this.getH5Cameral()
-                  this.takePicture();
+                  // this.takePicture();
+                  this.phoneNumber=data['phonenumber']
+                  this.register();
                 }
               }
             ]
@@ -291,11 +322,47 @@ export class ContactPage {
     })
     // this.stopCameral();
   }
+  //注册
+  register() {
+      console.log(this.face_token)
+      console.log(this.phoneNumber)
+      // console.log(this.user_id)
+      let _self=this;
+      if (!this.face_token || !this.phoneNumber) {
+          alert('信息错误')
+          return
+      }
+      return Promise.all([this.http.registerDB(this.face_token, this.phoneNumber), this.http.faceSetAddface(this.face_token)]).then(data => {
+          // Promise.all([this.http.registerDB('dcc9adbb8533bc083083bef62795a8e7', 6499,'2088402239622912')]).then(data=>{
+          console.log('ss', data)
+          // this.userservice.login(this.face_token, this.imgBase, null, this.user_id, this.phoneNumber)
+          // let registerSuccessAlert = this.promptAlert.create({
+          //     title: '提示',
+          //     message: "注册成功,点击确认进入授权页面",
+          //     buttons: [
+          //         {
+          //             text: '确认',
+          //             handler: data => {
+          //                 console.log('registerSuccesss');
+          //                 // this.navCtrl.pop()
+                          _self.qrcode(null)     
+          //             }
+          //         }
+          //     ]
+          // })
+          // registerSuccessAlert.present();
+      }).catch(err => {
+          console.log('ee')
+
+          console.log(err)
+      })
+      
+  }
   getLoginInfo(face_token) {
     console.log(face_token)
     let _self = this;
     this.http.getLoginInfo(face_token).then((data: any) => {
-      console.log(data)
+      console.log('注册信息',data)
       if (!data) {
         let loginSuccessAlert = this.promptAlert.create({
           title: '提示',
@@ -323,7 +390,7 @@ export class ContactPage {
         _self.phoneNumber = data['phonenumber']
         const prompt = this.promptAlert.create({
           title: '提示',
-          message: "输入手机号确认",
+          message: "输入手机4位尾号确认",
           inputs: [
             {
               name: 'phonenumber',
@@ -346,10 +413,10 @@ export class ContactPage {
                 // console.log('保存', data['phonenumber']);
                 // console.log('保存', face_token);
                 // this.register(_self.face_token, _self.phoneNumber, _self.imgBase)
-                if (data['phonenumber'] == _self.phoneNumber) {
+                if (data['phonenumber'] == _self.phoneNumber.slice(-4)) {
                   _self.isUser = true;
-                  _self.userservice.login(_self.face_token, _self.imgBase, null, _self.user_id, data.phonenumber)
-
+                  this.payPath="zhifubao"
+                  // _self.userservice.login(_self.face_token, _self.imgBase, null, _self.user_id, data.phonenumber)
                 } else {
                   return false;
                 }
@@ -378,7 +445,45 @@ export class ContactPage {
   }
   goToMyOrderPage(e) {
     console.log('dd')
-    this.navCtrl.push(OrderPage)
+    // this.navCtrl.push(OrderPage)
+    const prompt = this.promptAlert.create({
+      title: '提示',
+      message: "输入手机4位尾号确认",
+      inputs: [
+        {
+          name: 'phonenumber',
+          placeholder: '手机尾号四位'
+        }
+      ],
+      buttons: [
+        {
+          text: '取消',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: '确认',
+          handler: data => {
+            // this.aliAccount = data['aliAccount'];
+            // console.log('保存',data['请输入支付宝账号']);
+            // console.log('保存', data['aliAccount']);
+            // console.log('保存', data['phonenumber']);
+            // console.log('保存', face_token);
+            // this.register(_self.face_token, _self.phoneNumber, _self.imgBase)
+            let string="15555555555"
+            if (string.slice(-4)=='5555') {
+              // _self.isUser = true;
+              // _self.userservice.login(_self.face_token, _self.imgBase, null, _self.user_id, data.phonenumber)
+              console.log(string)
+            } else {
+              return false;
+            }
+          }
+        }
+      ]
+    });
+    prompt.present();
   }
   getTradeNumber() {
     let _self = this;
@@ -434,6 +539,50 @@ export class ContactPage {
     }, err => {
       console.log(err)
     });
+  }
+  pay(e){
+    console.log('gg',e)
+    this.payPath=e;
+    this.payPathChange();
+  }
+  payPathChange(){
+    console.log(this.payPath);
+    if(this.payPath==null){ return }
+    if(this.payPath=="zhifubao"){
+      // alert('支付包')
+      if(this.user_id){
+        alert('支付宝下单代扣成功')
+      }else{
+        this.qrcode(this.payPath);
+      }
+    }else{
+      // alert("微信")
+      if(this.open_id){
+        alert('支付宝下单代扣成功')
+      }else{
+        // this.qrcode(this.payPath); 
+        alert('微信二维码授权')               
+      }
+    }
+  }
+  qrcode(path){
+    console.log(this.face_token,this.phoneNumber);
+    let dataText=null;
+    if(path){
+      dataText=`http://neighbour.southeastasia.cloudapp.azure.com/Alipay/platform.html?face=${this.face_token}%26phone=${this.phoneNumber}%26uuid=${this.device.uuid}%26uuid=${this.payPath}`      
+    }else{
+      dataText=`http://neighbour.southeastasia.cloudapp.azure.com/Alipay/platform.html?face=${this.face_token}%26phone=${this.phoneNumber}%26uuid=${this.device.uuid}`
+    }
+    // let redirectUrl=encodeURIComponent(`http://192.168.0.6:8080/Alipay/auth.html?face=${this.face_token}&phone=${this.phoneNumber}`)
+    // console.log(encodeURIComponent(redirectUrl))
+    // let dataText=`https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=2018062660475092%26scope=auth_user%26redirect_uri=${redirectUrl}`
+    console.log(dataText)
+    this.navCtrl.push(QRcodePage,{'src':dataText,path:path}) 
+  }
+  payCancel(e){
+    console.log('payCancel',e)
+    this.navCtrl.pop();
+    // this.isUser=false;
   }
   ionViewWillLeave() {
     console.log('willleave')
