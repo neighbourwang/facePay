@@ -28,23 +28,23 @@ export class MyApp {
       splashScreen.hide();
       let isLogin = this.userservice.isLogin();
       console.log(isLogin)
-      // console.log('this.device.uuid', this.device.uuid)
-      // this.Jpush.init().then(res => { console.log(res) });  // 初始化
-      // this.Jpush['setAlias']({ sequence: 1, alias: this.device.uuid }).then((result) => {
-      //   console.log('alias', result)
-      // }).catch(err => {
-      //   console.log(err)
-      // })
-      // document.addEventListener("jpush.openNotification", (event?: any) => {
-      //   console.log("===============打开推送内容===============")
-      //   console.log(event)
-      //   // alert(event.alert)
-      //   console.log(event.extras.tradeNum)
-      //   if (event.extras.tradeNum != 'll') {
-      //     let url = `alipays://platformapi/startapp?saId=10000007&clientVersion=3.7.0.0718&qrcode=http%3A%2F%2Fneighbour.southeastasia.cloudapp.azure.com%2FaliPay%2Findex.html%3FtradeNo%3D${event.extras.tradeNum}`
-      //     window.open(url, '_system', 'location=yes');
-      //   }
-      // }, false);
+      console.log('this.device.uuid', this.device.uuid)
+      this.Jpush.init().then(res => { console.log(res) });  // 初始化
+      this.Jpush['setAlias']({ sequence: 1, alias: this.device.uuid }).then((result) => {
+        console.log('alias', result)
+      }).catch(err => {
+        console.log(err)
+      })
+      document.addEventListener("jpush.openNotification", (event?: any) => {
+        // console.log("===============打开推送内容===============")
+        console.log(event)
+        // alert(event.alert)
+        console.log(event.extras.tradeNum)
+        if (event.extras.tradeNum != 'll') {
+          let url = `alipays://platformapi/startapp?saId=10000007&clientVersion=3.7.0.0718&qrcode=http%3A%2F%2Fneighbour.southeastasia.cloudapp.azure.com%2FaliPay%2Findex.html%3FtradeNo%3D${event.extras.tradeNum}`
+          window.open(url, '_system', 'location=yes');
+        }
+      }, false);
     });
   }
   ionViewDidEnter() {

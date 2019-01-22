@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-// import { CameraPreviewService} from '../../providers/cameraPreview.service';
+import { CameraPreviewService} from '../../providers/cameraPreview.service';
 import { App } from 'ionic-angular';
 import { PreviewPage } from '../preview/preview';
 // import { Alipay } from '@ionic-native/alipay';
 import { AlertController } from 'ionic-angular';
+import { ElementRef, Renderer2 } from '@angular/core';
 
 declare var  cordova:any;
 
@@ -15,11 +16,21 @@ declare var  cordova:any;
 export class AboutPage {
 
   constructor(public navCtrl: NavController,
-    // private cameraPreview: CameraPreviewService,
+    private previewcamera: CameraPreviewService,
     private app: App,
     // private alipay: Alipay,
+    private ElementRef: ElementRef,
     private promptAlert:AlertController) {
 
+  }
+  viewDiv=null;
+  fillDiv=null;
+  ionViewWillEnter() {
+    // this.viewDiv = this.ElementRef.nativeElement.querySelector('.trView');
+    // this.fillDiv = this.ElementRef.nativeElement.querySelector('.fillDiv');
+    // console.log(this.viewDiv.clientWidth)
+    // this.viewDiv.setAttribute('style', `height:${this.viewDiv.clientWidth}px`)
+    // this.fillDiv.setAttribute('style', `top:${this.viewDiv.clientWidth}px`)
   }
   cameraStart() {
     this.app.getRootNav().push(PreviewPage);
@@ -91,5 +102,45 @@ export class AboutPage {
         console.log(e.memo)
         console.log(JSON.stringify(e))
       });
+  }
+  takePicture() {
+    let _self = this;
+    _self.previewcamera.startCamera(this.viewDiv.clientWidth, this.viewDiv.clientHeight).then(data => {
+      console.log('previewcamera', data)
+      _self.previewcamera.getSupportedFlashModes().then(data => {
+        console.log(data)
+        if (data.length > 0) {
+          //   _self.previewcamera.getFlashMode().then(data => {
+          //     console.log(data)
+          //   })
+          return _self.previewcamera.setFlashMode('off').then(data => {
+            console.log(data)
+          })
+        }
+      }).then(() => {
+        // setTimeout(() => {
+        //   this.previewcamera.takePicture(this.dom.clientWidth, this.dom.clientHeight).then(data => {
+        //     _self.imgBase = `data:image/jpeg;base64,${data[0]}`;
+        //     _self.askServer(_self.imgBase)
+        //     // console.log(_self.base64)
+        //     _self.img = new Image()
+        //     _self.img.src = _self.imgBase;
+        //     _self.previewcamera.StopCameraPreview()
+        //     // _self.drawImage();
+        //     _self.previewOn = false;
+        //   })
+        // }, 1000)
+      })
+    }).catch(err => {
+      console.log(err)
+    });
+    // } else {
+    //     console.log('android')
+    //     this.getH5Cameral()
+    // }
+  }
+  cameraStop(){
+    this.previewcamera.StopCameraPreview()
+
   }
 }

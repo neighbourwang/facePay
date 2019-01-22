@@ -164,10 +164,10 @@ export class PayPage {
     //在人脸群中查找
     _self.stopCameral();
     this.http.faceSearch(base64.slice(22)).then((data: any) => {
-      console.log(data)
+      console.log('jjj',data)
       //查到登陆成功
       if (data.results && data.results[0].confidence > 90) {
-        console.log(data.results[0].confidence > 90)
+        console.log('ccc')
         _self.face_token = data.results[0].face_token;
         _self.getLoginInfo(data.results[0].face_token)
 
@@ -218,7 +218,8 @@ export class PayPage {
         loginSuccessAlert.present();
       }
     }).catch(err => {
-      console.log(err)
+      console.log('dddd',err)
+
     })
     // this.stopCameral();
   }

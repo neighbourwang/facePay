@@ -8,10 +8,8 @@ import 'rxjs/Rx'
 // } else { 
 //     console.log('we got a development build'); 
 // }
-// let baseUrl="http://127.0.0.1:8082"
-// let baseUrl="http://10.10.0.124:8082"
-let baseUrl="http://168.63.253.125:8080"
-let baseUrl2="http://168.63.253.125:8082"
+let baseUrl="http://168.62.188.30:8080"
+let baseUrl2="http://168.62.188.30:8082"
 const httpOptions = {
     headers: new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'

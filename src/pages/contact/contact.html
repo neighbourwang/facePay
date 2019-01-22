@@ -1,68 +1,24 @@
-<ion-header>
+<ion-header class="payHeader">
   <ion-navbar>
     <ion-title>
       支付
     </ion-title>
   </ion-navbar>
 </ion-header>
-
 <ion-content class="contactpage">
-  <!-- <ion-list>
-    <ion-list-header>Follow us on Twitter</ion-list-header>
-    <ion-item>
-      <ion-icon name="ionic" item-start></ion-icon>
-      @myframework
-    </ion-item>
-  </ion-list> -->
-  <div class="PayVedio2" id="PayVedio2" on-tap="takePicture()" >
-      <!-- <video id="video1" width="300" src="" autoplay>Video sream is no available</video> -->
-      <canvas id="canvas1" width="300" height="300">canvas is support</canvas>
-      <!-- <img id="iimg" alt=""> -->
-      
+  <div>
+    <!-- <div class="registerTab">
+      <ion-icon class="closeBack" name="close" on-tap="backToMine(e)">返回</ion-icon>
+      <div>支付</div>
+    </div> -->
+    <div class="conView"></div>
+    <div class="PayVedio2" [style.display]="!preview?'block':'none'" id="myVideo" on-tap="takePicture()">
+      <canvas id="canvas1">canvas is support</canvas>
     </div>
-    <!-- <div class="PayOrderDiv" *ngIf="true">
-    
-        
-      <button ion-button on-tap="goToMyOrderPage()">商家下订单</button>
-        
-      </div> -->
-      <!-- <button ion-button on-tap="startAnimation()">startAnimation</button> -->
-      
-      <!-- <div class="circle-load"  *ngIf="previewOn">
-        <svg width="300px" height="300px" version="1.1" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="150" cy="150" r="145" stroke-width="10" stroke="gainsboro" fill="none"></circle>
-            <circle cx="150" cy="150" r="145" stroke-width="10" stroke="darkturquoise" fill="none" class="circle-load-svg"></circle>
-        </svg>
-      </div> -->
-      <div class="payDiv" *ngIf="false">
-        <ion-list radio-group [(ngModel)]="payPath" (ionChange)="payPathChange()">
-          <!-- <ion-list-header>
-            选择支付方式
-          </ion-list-header> -->
-        
-          <ion-item>
-            <ion-avatar item-start>
-                <img src="./assets/imgs/zhifubao.png">
-            </ion-avatar>
-            <ion-label>支付宝</ion-label>
-            <ion-radio checked="true" value="zhifubao"></ion-radio>
-          </ion-item>
-        
-          <ion-item>
-            <ion-avatar item-start>
-                <img src="./assets/imgs/wechatlogo.png">
-            </ion-avatar>
-            <ion-label>微信</ion-label>
-            <ion-radio value="wechat"></ion-radio>
-          </ion-item>
-          <!-- <ion-item>
-            <ion-label>其他</ion-label>
-            <ion-radio value="rust"></ion-radio>
-          </ion-item> -->
-        
-         
-        </ion-list>
-      </div>
+    <div class="conFillDiv">
+      <!-- <button ion-button on-tap="drawCanvas()">startCamera</button> -->
+      <!-- <button ion-button on-tap="stopCameral()">stopCamera</button> -->
+    </div>
+  </div>
 </ion-content>
 <pay-path *ngIf="isUser" class="payPath" (payType)="pay($event)" (cancel)="payCancel(e)"></pay-path>
-

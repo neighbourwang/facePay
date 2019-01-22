@@ -1,27 +1,43 @@
 .contactpage{
     position: relative;
-    background: rgb(232,233,232);
+    background-color: transparent;
+    width:100%;
+    overflow: hidden;
+    .registerTab{
+        height:50px;
+        background-color: #fff;
+        .closeBack{
+            width:3rem;
+            padding-left:1rem;
+            font-weight: bold; 
+            font-size: 3rem;
+            line-height: 3rem;
+        }
+    }
+    .conView{
+        position: relative;
+        width:100%;
+        height:375px;
+        left: 0;
+        top:0;   
+        background-image: url(../assets/trbg.png);
+        background-size:100%;        
+    }
+    .conFillDiv{
+        background-color: #fff;
+        position: absolute;
+        top:375px;
+        bottom: 0;
+        width: 100%;
+    }
     .PayVedio2{
         position: absolute;
-        // height:300px;
-        // width:300px;
-        top: 3rem;
-        left: 50%;
-        transform: translateX(-50%);
-        border:10px solid darkturquoise; 
-        border-radius: 50%;
-        background-color: gray;
-        // background-image: url('../assets/imgs/iu.jpeg');
-        // background-size:100%;
-        video{
-            display: none;
-        }
-        canvas{
-            // width:250px;
-            // height:250px;
-            // display: none;
-            
-        }
+        overflow: hidden;
+        height:0;
+        width:0;
+        background-color: #fff;
+        top: 0;
+        left: 0;
         overflow: hidden;
     }
     .PayOrderDiv{

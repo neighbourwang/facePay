@@ -57,7 +57,7 @@ export class CameraPreviewService {
             width: x,
             height: y,
             // height: window['screen']['height'],
-            quality: 100
+            quality: 90
         }
         // console.log(pictureOpts.width)
         return this.cameraPreview.takePicture(pictureOpts)

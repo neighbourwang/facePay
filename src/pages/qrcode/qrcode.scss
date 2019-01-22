@@ -1,3 +1,14 @@
+.qcodeTab{
+    height:50px;
+    background-color: #fff;
+    .closeBack{
+        width:3rem;
+        padding-left:1rem;
+        font-weight: bold; 
+        font-size: 3rem;
+        line-height: 3rem;
+    }
+}
 .qcode{
     width:100%;
     text-align: center;

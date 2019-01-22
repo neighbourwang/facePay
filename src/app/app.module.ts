@@ -25,6 +25,7 @@ import { Camera } from '@ionic-native/camera'
 
 import { wyHttpService } from '../config/http.service'
 import { UserService } from '../config/user.service'
+import { payUserService } from '../config/payUser.service'
 import { CameraPreview } from '@ionic-native/camera-preview';
 import { Device } from '@ionic-native/device';
 import { Wechat } from '@ionic-native/wechat';

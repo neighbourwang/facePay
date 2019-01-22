@@ -13,7 +13,7 @@ import { Device } from '@ionic-native/device';
 // import { JPush } from '@jiguang-ionic/jpush';
 import { CameraPreviewService } from '../../providers/cameraPreview.service';
 import { window } from 'rxjs/operators/window';
-import { ElementRef ,Renderer2} from '@angular/core';
+import { ElementRef, Renderer2 } from '@angular/core';
 
 // import { window } from 'rxjs/operators/window';
 declare var cordova: any;
@@ -31,9 +31,9 @@ export class RegisterPage {
         private promptAlert: AlertController,
         private device: Device,
         private previewcamera: CameraPreviewService,
-        private statusBar:StatusBar,
-        private ElementRef:ElementRef,
-        private Renderer2:Renderer2
+        private statusBar: StatusBar,
+        private ElementRef: ElementRef,
+        private Renderer2: Renderer2
     ) {
         let _self = this;
         window['getCode'] = function (arg) {
@@ -52,58 +52,57 @@ export class RegisterPage {
     i = 0;
     aliAccount = null;
     video = null;
-    img = null;
     canvas = null;
     ctx = null;
     authSign = null;
     previewOn: boolean = false;
-    body=null;
-    deviceWidth=375;
+    body = null;
+    deviceWidth = 375;
     currentStyles: {};
-    dom=null;
-    myVideo=null;
+    dom = null;
+    myVideo = null;
+    viewDiv = null;
+    fillDiv = null;
+    preview = true;
+    pageWidth = 0;
+    pageHeight = 0;
     ngOnInit() {
         // setTimeout(this.getH5Cameral(), 0)
         console.log('iii');
         this.statusBar.hide();
-        // this.video = document.getElementById('video2');
-        this.canvas = document.getElementById('canvas2');
-        this.ctx = this.canvas.getContext('2d');
-        this.body=document.getElementsByTagName('body')[0];
-        this.dom=this.ElementRef.nativeElement.querySelector('.registerPage');
-        // this.myVideo=this.ElementRef.nativeElement.querySelector('.myVideo')
-        // this.myVideo=document.getElementById('myVideo')
-        console.log(this.dom.clientWidth)
-        this.deviceWidth=0.7*(this.dom.clientWidth);
-        // this.myVideo.setAttribute('height',this.deviceWidth)
-        // console.log(this.myVideo);
-        console.log(this.deviceWidth);
-        // this.myVideo.setAttribute('style',`height:${this.deviceWidth}px`)
-        this.canvas.setAttribute('width',`${this.deviceWidth-20}px`)
-        this.canvas.setAttribute('height',`${this.deviceWidth-20}px`)
+        this.preview = true;
     }
     ionViewWillEnter() {
         console.log('register')
         console.log(this.device)
+        this.preview = true;
+        this.pageWidth = this.ElementRef.nativeElement.querySelector('.registerPage').clientWidth;
+        this.pageHeight = this.ElementRef.nativeElement.querySelector('.registerPage').clientHeight;
+        this.viewDiv = this.ElementRef.nativeElement.querySelector('.trView');
+        this.fillDiv = this.ElementRef.nativeElement.querySelector('.fillDiv');
+        console.log(this.viewDiv.clientWidth)
+        this.viewDiv.setAttribute('style', `height:${this.pageWidth}px`)
+        this.fillDiv.setAttribute('style', `top:${this.pageWidth + 50}px`)
         // console.log(this.device.platform)
-
-        // this.takePicture()
+        if (!this.userservice.isLogin()) {
+            this.takePicture()
+        }
         // this.drawImage(false)
     }
     setCurrentStyles() {
         // CSS styles: set per current state of component properties
         this.currentStyles = {
-          'width': this.deviceWidth,
-          'height':this.deviceWidth
+            'width': this.deviceWidth,
+            'height': this.deviceWidth
         };
-      }
+    }
     takePicture() {
         let _self = this;
         this.previewOn = true;
         // await this.
         // if (this.device.platform == "iOS") {
         console.log('ios')
-        _self.previewcamera.startCamera(this.dom.clientWidth,this.dom.clientHeight).then(data => {
+        _self.previewcamera.startCamera(this.pageWidth, this.pageWidth).then(data => {
             console.log('previewcamera', data)
             _self.previewcamera.getSupportedFlashModes().then(data => {
                 console.log(data)
@@ -116,18 +115,17 @@ export class RegisterPage {
                     })
                 }
             }).then(() => {
-                setTimeout(()=>{
-                    this.previewcamera.takePicture(this.dom.clientWidth,this.dom.clientHeight).then(data => {
-                      _self.imgBase = `data:image/jpeg;base64,${data[0]}`;
-                      _self.askServer(_self.imgBase)
-                      // console.log(_self.base64)
-                      _self.img = new Image()
-                      _self.img.src = _self.imgBase;
-                      _self.previewcamera.StopCameraPreview()
-                      // _self.drawImage();
-                      _self.previewOn = false;
-                  })
-                  },1000) 
+                setTimeout(() => {
+                    this.previewcamera.takePicture(this.pageWidth, this.pageWidth).then(data => {
+                        _self.askServer(`data:image/jpeg;base64,${data[0]}`)
+                        // console.log(_self.base64)
+                        // _self.img = new Image()
+                        _self.imgBase = `data:image/jpeg;base64,${data[0]}`;
+                        // _self.previewcamera.StopCameraPreview()
+                        // _self.drawImage();
+                        // _self.previewOn = false;
+                    })
+                }, 500)
             })
             // setTimeout(() => {
 
@@ -139,6 +137,35 @@ export class RegisterPage {
         //     console.log('android')
         //     this.getH5Cameral()
         // }
+    }
+    drawCanvas() {
+        this.preview = false;
+        this.myVideo = this.ElementRef.nativeElement.querySelector('.myVideo');
+        console.log(this.pageWidth)
+        this.myVideo.setAttribute('style', `height:${this.pageWidth}px;width:${this.pageWidth}px`)
+        this.canvas = document.getElementById('canvas2');
+        this.ctx = this.canvas.getContext('2d');
+        this.canvas.setAttribute('width', `${this.pageWidth}px`)
+        this.canvas.setAttribute('height', `${this.pageWidth}px`)
+        var img = new Image();
+        // img.src = '../../assets/imgs/iu.jpeg';
+        img.src = this.imgBase;
+        let _self = this;
+        img.onload = function () {
+            _self.circleImg(_self.ctx, img, _self.pageWidth / 2 - _self.pageWidth * 7 / 20, _self.pageWidth / 2 - _self.pageWidth * 7 / 20, _self.pageWidth * 7 / 20);
+            // _self.ctx.drawImage(img, 0,0);
+            _self.stopCameral();  
+        }
+    }
+    circleImg(ctx, img, x, y, r) {
+        ctx.save();
+        var d = 2 * r;
+        var cx = x + r;
+        var cy = y + r;
+        ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+        ctx.clip();
+        ctx.drawImage(img, x, y, d, d);
+        ctx.restore();
     }
     backToMine(e) {
         // console.log('taped', e)
@@ -269,7 +296,7 @@ export class RegisterPage {
         //     console.log('video stop')
         //     return
         // }
-        console.log('drawing', rectangle)
+        console.log('drawing', rectangle, this.deviceWidth)
         // if (this.device.platform == "iOS") {
         // } else {
         //     this.int1 = setInterval(() => {
@@ -280,8 +307,8 @@ export class RegisterPage {
         // setTimeout(_self.stopCameral(),10000)
 
         if (rectangle) {
-            this.ctx.drawImage(this.img, rectangle.left - 50, rectangle.top - 50, this.deviceWidth, this.deviceWidth, 0, 0, this.deviceWidth, this.deviceWidth);
-            // this.ctx.drawImage(this.img,0,0,300,300);
+            this.ctx.drawImage(this.imgBase, rectangle.left > 0 ? rectangle.left : 0, rectangle.top, this.deviceWidth, this.deviceWidth, 0, 0, this.deviceWidth, this.deviceWidth);
+            // this.ctx.drawImage(this.img,0,0);
         } else {
             // this.int1 = setInterval(() => {
             // this.ctx.drawImage(this.video, 0, 0);
@@ -296,20 +323,21 @@ export class RegisterPage {
         }
     }
     stopCameral() {
-        if (this.streamTrack.length == 0) return;
-        // let stream = video.srcObject;
-        // let tracks = stream.getTracks();
-        this.streamTrack.forEach(function (track) {
-            track.stop();
-        });
+        this.previewcamera.StopCameraPreview()
+        // if (this.streamTrack.length == 0) return;
+        // // let stream = video.srcObject;
+        // // let tracks = stream.getTracks();
+        // this.streamTrack.forEach(function (track) {
+        //     track.stop();
+        // });
 
-        this.video.srcObject = null;
-        // this.streamTrack[0].stop();
-        // let video = document.getElementById('video');
-        // video.stop();
-        clearInterval(this.int1);
-        this.int1 = null;
-        // clearInterval(this.int2)
+        // this.video.srcObject = null;
+        // // this.streamTrack[0].stop();
+        // // let video = document.getElementById('video');
+        // // video.stop();
+        // clearInterval(this.int1);
+        // this.int1 = null;
+        // // clearInterval(this.int2)
 
     }
     askServer(base64) {
@@ -339,6 +367,7 @@ export class RegisterPage {
         //     console.log(err)
         // })
         //在人脸群中查找
+        let _self=this;
         this.http.faceSearch(base64.slice(22)).then((data: any) => {
             console.log(data)
             //查到登陆成功
@@ -356,8 +385,15 @@ export class RegisterPage {
                         {
                             text: '确认',
                             handler: data => {
-                                // console.log('detect failed');
-                                this.takePicture()
+                                this.previewcamera.takePicture(this.pageWidth, this.pageWidth).then(data => {
+                                    _self.askServer(`data:image/jpeg;base64,${data[0]}`)
+                                    // console.log(_self.base64)
+                                    // _self.img = new Image()
+                                    _self.imgBase = `data:image/jpeg;base64,${data[0]}`;
+                                    // _self.previewcamera.StopCameraPreview()
+                                    // _self.drawImage();
+                                    // _self.previewOn = false;
+                                })
                             }
                         }
                     ]
@@ -365,11 +401,15 @@ export class RegisterPage {
                 loginSuccessAlert.present();
             } else {
                 // console.log(data.results[0].confidence > 90)
-                this.drawImage(data.faces[0].face_rectangle);
-                if (data.results[0].confidence > 90) {
-                    this.getLoginInfo(data.results[0].face_token, base64)
+                // this.drawImage(data.faces[0].face_rectangle);
+                // this.previewcamera.takePicture(this.pageWidth, this.pageHeight).then(data => {
+                //     this.imgBase = `data:image/jpeg;base64,${data[0]}`;
+                // })
+                this.drawCanvas()
+                if (data.results[0].confidence > 75) {
+                    this.getLoginInfo(data.results[0].face_token)
                 } else {
-                    this.showPrompt(data.faces[0].face_token, base64)
+                    this.showPrompt(data.faces[0].face_token)
                 }
             }
         }).catch(err => {
@@ -377,7 +417,7 @@ export class RegisterPage {
         })
 
     }
-    showPrompt(face_token, base64) {
+    showPrompt(face_token) {
         let _self = this;
         const prompt = this.promptAlert.create({
             title: '提示',
@@ -402,7 +442,7 @@ export class RegisterPage {
                         // if()
                         console.log(data['phonenumber'])
                         // let reg = /\d{4}/
-                        let reg=/^1[0-9]{10}$/
+                        let reg = /^1[0-9]{10}$/
                         if (!reg.test(data['phonenumber'])) {
                             return false;
                         }
@@ -412,7 +452,6 @@ export class RegisterPage {
                         // console.log('保存', data['phonenumber']);
                         // console.log('保存', face_token);
                         // this.register(face_token, data['phonenumber'], base64)
-                        _self.imgBase = base64;
                         _self.face_token = face_token;
                         _self.phoneNumber = data['phonenumber']
                         // _self.getSignInfo()
@@ -424,11 +463,11 @@ export class RegisterPage {
         prompt.present();
     }
     //查询注册信息
-    getLoginInfo(face_token, base64) {
+    getLoginInfo(face_token) {
         console.log(face_token)
-        let _self=this;
+        let _self = this;
         this.http.getLoginInfo(face_token).then((data: any) => {
-            console.log('用户注册信息',data)
+            console.log('用户注册信息', data)
             // console.log(JPush)
             // JPush['setAlias']({ sequence: 1, alias: data[0][2] }).then((result) => {
             //     console.log('alias',result)
@@ -439,18 +478,17 @@ export class RegisterPage {
             //     // var sequence = error.sequence
             //     // var errorCode = error.code
             // })
-            if (data&&data.user_id) {
-                let baseCanvas = this.canvas.toDataURL("image/png");
-                console.log()
-                this.userservice.login(data.face_id, baseCanvas, null, data.user_id, data.phonenumber)
+            if (data && data.user_id) {
                 let loginSuccessAlert = this.promptAlert.create({
                     title: '提示',
                     message: "登陆成功",
                     buttons: [
                         {
                             text: '确认',
-                            handler: data => {
-                                console.log('loginSuccesss');
+                            handler: tdata => {
+                                console.log('loginSuccesss',data);
+                                let baseCanvas = this.canvas.toDataURL("image/png");                                
+                                this.userservice.login(data.face_id, baseCanvas, null, data.user_id, data.phonenumber)
                                 // alert('已授权')
                                 this.navCtrl.pop()
                             }
@@ -458,11 +496,35 @@ export class RegisterPage {
                     ]
                 })
                 loginSuccessAlert.present();
-            } else if(data&&!data['auth']&&data['phonenumber']&&data['face_id']){
-                _self.phoneNumber=data.phonenumber;
-                _self.face_token=data.face_id;
-                _self.qrcode()         
-            }else {
+            } else if (data && !data['auth'] && data['phonenumber'] && data['face_id']) {
+                let loginSuccessAlert = this.promptAlert.create({
+                    title: '提示',
+                    message: "点击确认扫描二维码完成授权",
+                    buttons: [
+                        {
+                            text: '确认',
+                            handler: tdata => {
+                                console.log('gpauth');
+                                _self.phoneNumber = data.phonenumber;
+                                _self.face_token = data.face_id;
+                                let baseCanvas = this.canvas.toDataURL("image/png");
+                                this.userservice.login(data.face_id, baseCanvas, null, data.user_id, data.phonenumber)
+                                _self.qrcode()
+                            }
+                        },
+                        {
+                            text: '以后再说',
+                            handler: tdata => {
+                                console.log('cancelpauth');
+                                let baseCanvas = this.canvas.toDataURL("image/png");
+                                this.userservice.login(data.face_id, baseCanvas, null, data.user_id, data.phonenumber)
+                                this.navCtrl.pop()
+                            }
+                        }
+                    ]
+                })
+                loginSuccessAlert.present();
+            } else {
                 console.log('未发现注册DB信息')
                 this.http.removeAllFaces(face_token).then(data => {
                     console.log(data);
@@ -478,9 +540,8 @@ export class RegisterPage {
                             },
                             {
                                 text: '确认',
-                                handler: data => {
-                                    // console.log('detect failed');
-                                    this.takePicture()
+                                handler: tdata => {
+                                   this.takePicture()
                                 }
                             }
                         ]
@@ -497,15 +558,16 @@ export class RegisterPage {
         console.log(this.face_token)
         console.log(this.phoneNumber)
         // console.log(this.user_id)
-        let _self=this;
+        let _self = this;
         if (!this.face_token || !this.phoneNumber) {
             alert('信息错误')
             return
         }
         return Promise.all([this.http.registerDB(this.face_token, this.phoneNumber), this.http.faceSetAddface(this.face_token)]).then(data => {
-            // Promise.all([this.http.registerDB('dcc9adbb8533bc083083bef62795a8e7', 6499,'2088402239622912')]).then(data=>{
             console.log('ss', data)
-            this.userservice.login(this.face_token, this.imgBase, null, this.user_id, this.phoneNumber)
+            //未授权时注册设备id
+            let baseCanvas = _self.canvas.toDataURL("image/png");                                
+            _self.userservice.login(_self.face_token, baseCanvas, null, this.device.uuid, _self.phoneNumber)
             // let registerSuccessAlert = this.promptAlert.create({
             //     title: '提示',
             //     message: "注册成功,点击确认进入授权页面",
@@ -515,7 +577,7 @@ export class RegisterPage {
             //             handler: data => {
             //                 console.log('registerSuccesss');
             //                 // this.navCtrl.pop()
-                            _self.qrcode()     
+            _self.qrcode()
             //             }
             //         }
             //     ]
@@ -652,18 +714,18 @@ export class RegisterPage {
             console.log(err)
         })
     }
-    qrcode(){
-        console.log(this.face_token,this.phoneNumber)
+    qrcode() {
+        console.log(this.face_token, this.phoneNumber)
         // let redirectUrl=encodeURIComponent(`http://192.168.0.6:8080/Alipay/auth.html?face=${this.face_token}&phone=${this.phoneNumber}`)
         // console.log(encodeURIComponent(redirectUrl))
         // let dataText=`https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=2018062660475092%26scope=auth_user%26redirect_uri=${redirectUrl}`
-        let dataText=`http://neighbour.southeastasia.cloudapp.azure.com/Alipay/platform.html?face=${this.face_token}%26phone=${this.phoneNumber}%26uuid=${this.device.uuid}`
+        let dataText = `http://neighbour.southeastasia.cloudapp.azure.com/Alipay/platform.html?face=${this.face_token}%26phone=${this.phoneNumber}%26uuid=${this.device.uuid}`
         console.log(dataText)
-        this.navCtrl.push(QRcodePage,{'src':dataText}) 
+        this.navCtrl.push(QRcodePage, { 'src': dataText })
     }
-    goToQRcodePage(){
+    goToQRcodePage() {
         console.log('dd')
-        this.navCtrl.push(QRcodePage,{'src':'123'}) 
+        this.navCtrl.push(QRcodePage, { 'src': '123' })
     }
     // window.getCode=function(arg) {
     //     console.log('11', arg)
@@ -672,11 +734,11 @@ export class RegisterPage {
     ionViewWillLeave() {
         console.log('willleave')
         // if (this.device.platform == "iOS") {
-            console.log('ios')
-           // this.previewcamera.StopCameraPreview()
+        console.log('ios')
+        this.previewcamera.StopCameraPreview()
         // }
     }
-   
+
     ngOnDestroy() {
         console.log('des')
     }
